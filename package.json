@@ -1,0 +1,31 @@
+{
+    "name": "@pinkcrab/elm-wp-bootstrap",
+    "version": "0.1.0",
+    "description": "JS bootstrap for mounting Elm apps in WordPress with standard ports for REST, notices, and clipboard.",
+    "license": "MIT",
+    "author": "Glynn Quelch <glynn.quelch@pinkcrab.co.uk>",
+    "homepage": "https://github.com/Pink-Crab/elm-wp-bootstrap",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Pink-Crab/elm-wp-bootstrap.git"
+    },
+    "keywords": ["wordpress", "elm", "ports", "bootstrap"],
+    "type": "module",
+    "main": "./dist/boot.js",
+    "types": "./dist/boot.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/boot.d.ts",
+            "import": "./dist/boot.js"
+        }
+    },
+    "files": ["dist", "src", "README.md", "LICENSE"],
+    "scripts": {
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "prepare": "npm run build"
+    },
+    "devDependencies": {
+        "typescript": "^5.4.0"
+    }
+}
