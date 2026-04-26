@@ -1,13 +1,11 @@
-import type { ElmApp, ElmOutboundPort } from '../types'
-
-export function wireClipboard(app: ElmApp): void {
-    const outbound = app.ports['copyToClipboard'] as ElmOutboundPort<string> | undefined
+export function wireClipboard(app) {
+    const outbound = app.ports['copyToClipboard']
     if (!outbound) {
         return
     }
 
     outbound.subscribe((text) => {
-        if (navigator.clipboard?.writeText) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
             void navigator.clipboard.writeText(text)
             return
         }
@@ -15,7 +13,7 @@ export function wireClipboard(app: ElmApp): void {
     })
 }
 
-function legacyCopy(text: string): void {
+function legacyCopy(text) {
     const ta = document.createElement('textarea')
     ta.value = text
     ta.style.position = 'fixed'

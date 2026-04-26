@@ -1,11 +1,5 @@
-import type { ElmApp, ElmOutboundPort, Notice } from '../types'
-
-interface WpNoticeDispatch {
-    createNotice?: (kind: string, message: string, options?: Record<string, unknown>) => void
-}
-
-export function wireNotice(app: ElmApp): void {
-    const outbound = app.ports['wpNotice'] as ElmOutboundPort<Notice> | undefined
+export function wireNotice(app) {
+    const outbound = app.ports['wpNotice']
     if (!outbound) {
         return
     }
@@ -20,17 +14,15 @@ export function wireNotice(app: ElmApp): void {
     })
 }
 
-function readWpNoticesDispatch(): WpNoticeDispatch | undefined {
-    const wp = (globalThis as {
-        wp?: { data?: { dispatch?: (store: string) => WpNoticeDispatch } }
-    }).wp
-    if (typeof wp?.data?.dispatch !== 'function') {
+function readWpNoticesDispatch() {
+    const wp = globalThis.wp
+    if (!wp || !wp.data || typeof wp.data.dispatch !== 'function') {
         return undefined
     }
     return wp.data.dispatch('core/notices')
 }
 
-function domFallback(notice: Notice): void {
+function domFallback(notice) {
     const host = ensureHost()
     const el = document.createElement('div')
     el.className = `notice notice-${notice.kind} is-dismissible`
@@ -44,8 +36,8 @@ function domFallback(notice: Notice): void {
     setTimeout(() => el.remove(), 5000)
 }
 
-function ensureHost(): HTMLElement {
-    const existing = document.querySelector<HTMLElement>('.elm-wp-notices')
+function ensureHost() {
+    const existing = document.querySelector('.elm-wp-notices')
     if (existing) {
         return existing
     }
@@ -60,7 +52,7 @@ function ensureHost(): HTMLElement {
     return host
 }
 
-function noticeColor(kind: Notice['kind']): string {
+function noticeColor(kind) {
     switch (kind) {
         case 'success':
             return '#46b450'
@@ -69,6 +61,8 @@ function noticeColor(kind: Notice['kind']): string {
         case 'warning':
             return '#ffb900'
         case 'info':
+            return '#00a0d2'
+        default:
             return '#00a0d2'
     }
 }
