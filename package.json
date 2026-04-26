@@ -11,21 +11,17 @@
     },
     "keywords": ["wordpress", "elm", "ports", "bootstrap"],
     "type": "module",
-    "main": "./dist/boot.js",
-    "types": "./dist/boot.d.ts",
+    "main": "./src/boot.js",
     "exports": {
-        ".": {
-            "types": "./dist/boot.d.ts",
-            "import": "./dist/boot.js"
-        }
+        ".": "./src/boot.js"
     },
-    "files": ["dist", "src", "README.md", "LICENSE"],
+    "files": ["src", "README.md", "LICENSE"],
     "scripts": {
-        "build": "tsc",
-        "typecheck": "tsc --noEmit",
-        "prepare": "npm run build"
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "devDependencies": {
-        "typescript": "^5.4.0"
+        "happy-dom": "^14.0.0",
+        "vitest": "^1.6.0"
     }
 }

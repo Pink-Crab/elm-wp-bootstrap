@@ -1,17 +1,6 @@
-import type {
-    ApiFetchRequest,
-    ApiFetchResponse,
-    ElmApp,
-    ElmInboundPort,
-    ElmOutboundPort,
-    FlagsBlob,
-} from '../types'
-
-type WpApiFetch = (opts: { path: string; method: string; data?: unknown }) => Promise<unknown>
-
-export function wireApiFetch(app: ElmApp, flags: FlagsBlob): void {
-    const outbound = app.ports['wpApiFetch'] as ElmOutboundPort<ApiFetchRequest> | undefined
-    const inbound = app.ports['wpApiFetchResult'] as ElmInboundPort<ApiFetchResponse> | undefined
+export function wireApiFetch(app, flags) {
+    const outbound = app.ports['wpApiFetch']
+    const inbound = app.ports['wpApiFetchResult']
 
     if (!outbound || !inbound) {
         return
@@ -23,7 +12,7 @@ export function wireApiFetch(app: ElmApp, flags: FlagsBlob): void {
     })
 }
 
-async function runRequest(req: ApiFetchRequest, flags: FlagsBlob): Promise<ApiFetchResponse> {
+async function runRequest(req, flags) {
     const wpApi = readWpApiFetch()
 
     if (wpApi) {
@@ -31,12 +20,14 @@ async function runRequest(req: ApiFetchRequest, flags: FlagsBlob): Promise<ApiFe
             const body = await wpApi({ path: req.path, method: req.method, data: req.body })
             return { id: req.id, ok: true, status: 200, body }
         } catch (err) {
-            const status = (err as { data?: { status?: number } })?.data?.status ?? 500
+            const status = (err && err.data && err.data.status) || 500
             return { id: req.id, ok: false, status, body: err }
         }
     }
 
-    const url = isAbsolute(req.path) ? req.path : trimTrailingSlash(flags.restRoot) + ensureLeadingSlash(req.path)
+    const url = isAbsolute(req.path)
+        ? req.path
+        : trimTrailingSlash(flags.restRoot) + ensureLeadingSlash(req.path)
 
     try {
         const response = await fetch(url, {
@@ -55,19 +46,19 @@ async function runRequest(req: ApiFetchRequest, flags: FlagsBlob): Promise<ApiFe
     }
 }
 
-function readWpApiFetch(): WpApiFetch | undefined {
-    const wp = (globalThis as { wp?: { apiFetch?: WpApiFetch } }).wp
-    return typeof wp?.apiFetch === 'function' ? wp.apiFetch : undefined
+function readWpApiFetch() {
+    const wp = globalThis.wp
+    return wp && typeof wp.apiFetch === 'function' ? wp.apiFetch : undefined
 }
 
-function isAbsolute(path: string): boolean {
+function isAbsolute(path) {
     return /^https?:\/\//i.test(path)
 }
 
-function trimTrailingSlash(s: string): string {
+function trimTrailingSlash(s) {
     return s.endsWith('/') ? s.slice(0, -1) : s
 }
 
-function ensureLeadingSlash(s: string): string {
+function ensureLeadingSlash(s) {
     return s.startsWith('/') ? s : '/' + s
 }

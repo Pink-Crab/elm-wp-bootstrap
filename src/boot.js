@@ -1,9 +1,8 @@
-import { wireApiFetch } from './ports/apiFetch'
-import { wireClipboard } from './ports/clipboard'
-import { wireNotice } from './ports/notice'
-import type { BootConfig, ElmApp, FlagsBlob } from './types'
+import { wireApiFetch } from './ports/apiFetch.js'
+import { wireClipboard } from './ports/clipboard.js'
+import { wireNotice } from './ports/notice.js'
 
-export function boot(config: BootConfig): ElmApp {
+export function boot(config) {
     const node = resolveNode(config.node)
     if (!node) {
         const target = typeof config.node === 'string' ? config.node : '<HTMLElement>'
@@ -25,34 +24,19 @@ export function boot(config: BootConfig): ElmApp {
     return app
 }
 
-function resolveNode(target: string | HTMLElement): HTMLElement | null {
+function resolveNode(target) {
     if (typeof target === 'string') {
-        return document.querySelector<HTMLElement>(target)
+        return document.querySelector(target)
     }
     return target
 }
 
-function readFlags(handle: string): FlagsBlob {
-    const blob = (globalThis as Record<string, unknown>)[handle]
+function readFlags(handle) {
+    const blob = globalThis[handle]
     if (!blob || typeof blob !== 'object') {
         throw new Error(
             `@pinkcrab/elm-wp-bootstrap: window.${handle} is not present — did you forget to enqueue and localize on the PHP side?`
         )
     }
-    return blob as FlagsBlob
+    return blob
 }
-
-export type {
-    ApiFetchRequest,
-    ApiFetchResponse,
-    BootConfig,
-    CurrentUser,
-    ElmApp,
-    ElmInboundPort,
-    ElmOutboundPort,
-    ElmProgram,
-    FlagsBlob,
-    HttpMethod,
-    Notice,
-    NoticeKind,
-} from './types'
