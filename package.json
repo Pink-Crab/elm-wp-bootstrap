@@ -1,6 +1,6 @@
 {
     "name": "@pinkcrab/elm-wp-bootstrap",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "JS bootstrap for mounting Elm apps in WordPress with standard ports for REST, notices, and clipboard.",
     "license": "MIT",
     "author": "Glynn Quelch <glynn.quelch@pinkcrab.co.uk>",

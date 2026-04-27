@@ -98,11 +98,11 @@ The JS bootstrap and the Elm package must agree on these names. Changing any is 
 
 ### Versioning
 
-Compatibility table across the three packages:
+All three packages share a major version. Within `1.x`, minor and patch versions can move independently per package — compatibility is guaranteed across the same major.
 
 | `pinkcrab/elm-mount` | `@pinkcrab/elm-wp-bootstrap` | `Pink-Crab/elm-wp` |
 |----------------------|------------------------------|--------------------|
-| `0.1.x`              | `0.1.x`                      | `1.0.x`            |
+| `1.x`                | `1.x`                        | `1.x`              |
 
 ## License
 
